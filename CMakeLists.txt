@@ -48,6 +48,7 @@ target_link_libraries(clock
     pico_ssd1306
     hardware_i2c
     hardware_rtc
+    pico_status_led
     pico_cyw43_arch_none
 )
 
@@ -56,7 +57,7 @@ pico_enable_stdio_usb(clock 1)
 pico_enable_stdio_uart(clock 0)
 
 
-## Executable 2 - scan_i2c
+## Executable 2 - scan_i2c - Helper executable to probe and find i2c devices
 
 # Tell CMake where to find the executable source file
 add_executable(scan_i2c
@@ -76,19 +77,3 @@ target_link_libraries(scan_i2c
 # Enable usb output, disable uart output
 pico_enable_stdio_usb(scan_i2c 1)
 pico_enable_stdio_uart(scan_i2c 0)
-
-
-add_executable(hello_world
-    src/hello_world.cpp
-    src/context.cpp
-)
-# Create map/bin/hex/uf2 files
-pico_add_extra_outputs(hello_world)
-target_link_libraries(hello_world
-    pico_stdlib
-    pico_status_led
-    hardware_rtc
-    pico_cyw43_arch_none
-)
-pico_enable_stdio_usb(hello_world 1)
-pico_enable_stdio_uart(hello_world 0)
