@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.14)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # explicitly for the pico w
-set(PICO_BOARD pico_w)
+# set(PICO_BOARD pico_w)
 
 # Include build functions from Pico SDK
 # Someday, support relative sdk placement
@@ -33,6 +33,7 @@ add_subdirectory(libs/ssd1306/pico-ssd1306)
 # Tell CMake where to find the executable source file
 add_executable(clock
     src/main.cpp
+    src/context.cpp
 )
 
 # Create map/bin/hex/uf2 files
@@ -49,7 +50,7 @@ target_link_libraries(clock
     hardware_i2c
     hardware_rtc
     pico_status_led
-    pico_cyw43_arch_none
+    # pico_cyw43_arch_none
 )
 
 # Enable usb output, disable uart output

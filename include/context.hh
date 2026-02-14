@@ -1,10 +1,12 @@
 
 #include <pico/types.h>
+
 enum CurrentMode{
     USUAL,
     SET_ALARM,
     SYNC_TIME
 };
+
 struct AppContext{
     datetime_t alarm_timer = {};
     char temperature[10] = {0};

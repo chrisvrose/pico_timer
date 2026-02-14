@@ -5,6 +5,7 @@
 #include <pico/types.h>
 #include "hardware/rtc.h"
 #include "context.hh"
+
 extern "C"{
 #include "pico/status_led.h"
 }
@@ -47,7 +48,7 @@ int main(){
 
     while (true) {
         app_context_instance.dispatch();
-        sleep_ms(100);
+        sleep_ms(10);
     }
 
     return 0;

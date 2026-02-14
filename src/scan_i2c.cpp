@@ -14,11 +14,11 @@
 //
 // E.g. if slave addresses 0x12 and 0x34 were acknowledged.
 
+#include <pico/stdio_usb.h>
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "pico/binary_info.h"
 #include "hardware/i2c.h"
-#include "tusb.h"
 
 // I2C reserves some addresses for special purposes. We exclude these from the scan.
 // These are any addresses of the form 000 0xxx or 111 1xxx
@@ -30,7 +30,7 @@ int main() {
     // Enable UART so we can print status output
     stdio_init_all();
     printf("waiting for usb host");
-    while (!tud_cdc_connected()) {
+    while (!stdio_usb_connected()) {
       printf(".");
       sleep_ms(500);
     }

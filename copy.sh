@@ -1,19 +1,20 @@
 #!/bin/bash
 
-DEVICE=/dev/sdb
+DEVICE=/dev/sda
 PART="${DEVICE}1"
 
 FILE=build/hello_world.uf2
 
 
 if [ -z $1 ]; then
-    echo "Not provided: $1"
-    FILE=build/hello_world.uf2
+    FILE=build/clock.uf2
+    echo "Missing argument. Defaulting to copying $FILE"
 else
     echo "Provided: $1"
     FILE=$1
 fi;
 
+echo "Checking if device is plugged in"
 fdisk -l $DEVICE | grep "model: RP2"
 
 DEVICE_EXISTS=$?
