@@ -1,4 +1,5 @@
-
+#pragma once
+#include "input.hh"
 #include <pico/types.h>
 
 enum CurrentMode{
@@ -12,10 +13,10 @@ struct AppContext{
     char temperature[10] = {0};
     CurrentMode currentMode = SYNC_TIME;
 
-    void dispatch();
+    void dispatch(Input input);
     private:
-    void dispatch_usual();
-    void dispatch_sync();
+    void dispatch_usual(Input input);
+    void dispatch_sync(Input input);
     void transition(CurrentMode newState){
         this->currentMode = newState;
     }

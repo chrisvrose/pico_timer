@@ -14,23 +14,22 @@ inline void print_date(){
     datetime_to_str(datebuf,sizeof(datebuf),&date_mut);
     printf("Date: %s\r",datebuf);
 }
-void AppContext::dispatch(){
+void AppContext::dispatch(Input enteredInput){
     switch (this->currentMode) {
-
     case USUAL:
-        dispatch_usual();
+        dispatch_usual(enteredInput);
     break;
     case SET_ALARM:
     break;
     case SYNC_TIME:
-        dispatch_sync();
+        dispatch_sync(enteredInput);
       break;
     }
 }
-void AppContext::dispatch_usual(){
+void AppContext::dispatch_usual(Input entered_input){
     print_date();
 }
-void AppContext::dispatch_sync(){
+void AppContext::dispatch_sync(Input entered_input){
     sleep_ms(1000);
     printf("We will pretend to sync time\n");
     datetime_t init_date = {

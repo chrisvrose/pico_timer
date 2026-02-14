@@ -5,6 +5,7 @@
 #include <pico/types.h>
 #include "hardware/rtc.h"
 #include "context.hh"
+#include "input.hh"
 
 extern "C"{
 #include "pico/status_led.h"
@@ -29,12 +30,15 @@ void update_alarm_callback(){
     led_state = !led_state;
 }
 
+
+
 int main(){
     stdio_init_all();
     rtc_init();
     bool ret = status_led_init();
     hard_assert(ret);
     rtc_enable_alarm();
+    InputManager inputManager;
 
     #ifdef WAIT_FOR_USB
     while(!stdio_usb_connected()){
@@ -47,7 +51,8 @@ int main(){
     rtc_set_alarm(&update_alarm, update_alarm_callback);
 
     while (true) {
-        app_context_instance.dispatch();
+        const Input entered_input = inputManager.poll_input();
+        app_context_instance.dispatch(entered_input);
         sleep_ms(10);
     }
 
