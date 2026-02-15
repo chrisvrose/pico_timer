@@ -26,6 +26,7 @@ include_directories(include)
 pico_sdk_init()
 
 add_subdirectory(libs/ssd1306/pico-ssd1306)
+add_subdirectory(libs/pico_dht/dht)
 
 
 ## Executable 1 - clock
@@ -41,6 +42,7 @@ pico_add_extra_outputs(clock)
 
 target_include_directories(clock PRIVATE
     libs/ssd1306
+    libs/pico_dht/dht/include
 )
 
 # Link to pico_stdlib (gpio, time, etc. functions)
@@ -50,6 +52,7 @@ target_link_libraries(clock
     hardware_i2c
     hardware_rtc
     pico_status_led
+    dht
     # pico_cyw43_arch_none
 )
 

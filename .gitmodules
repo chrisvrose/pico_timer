@@ -1,3 +1,6 @@
 [submodule "libs/ssd1306/pico-ssd1306"]
 	path = libs/ssd1306/pico-ssd1306
 	url = git@github.com:Harbys/pico-ssd1306.git
+[submodule "libs/pico_dht"]
+	path = libs/pico_dht
+	url = git@github.com:vmilea/pico_dht.git
