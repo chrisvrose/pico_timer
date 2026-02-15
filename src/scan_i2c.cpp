@@ -14,11 +14,13 @@
 //
 // E.g. if slave addresses 0x12 and 0x34 were acknowledged.
 
+#include <hardware/gpio.h>
+#include <pico/binary_info/code.h>
 #include <pico/stdio_usb.h>
 #include <stdio.h>
-#include "pico/stdlib.h"
-#include "pico/binary_info.h"
 #include "hardware/i2c.h"
+#include <stdlib.h>
+
 
 // I2C reserves some addresses for special purposes. We exclude these from the scan.
 // These are any addresses of the form 000 0xxx or 111 1xxx

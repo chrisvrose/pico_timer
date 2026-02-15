@@ -35,6 +35,8 @@ add_subdirectory(libs/pico_dht/dht)
 add_executable(clock
     src/main.cpp
     src/context.cpp
+    src/display.cpp
+    src/temp_dht.cpp
 )
 
 # Create map/bin/hex/uf2 files

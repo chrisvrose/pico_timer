@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <optional>
+#include <utility>
 #include <pico/assert.h>
 #include <pico/stdio.h>
 #include <pico/stdio_usb.h>
@@ -9,6 +10,8 @@
 #include "hardware/rtc.h"
 #include "context.hh"
 #include "input.hh"
+#include "display.hh"
+#include "temp_dht.hh"
 
 extern "C"{
 #include "pico/status_led.h"
@@ -16,7 +19,7 @@ extern "C"{
 
 bool led_state = true;
 
-#define WAIT_FOR_USB
+// #define WAIT_FOR_USB
 
 const datetime_t update_alarm = {
     .year=-1,
@@ -49,32 +52,44 @@ std::optional<std::pair<float,float>> measure_dht(dht_t dht){
 
 int main(){
     stdio_init_all();
+
+    #ifdef WAIT_FOR_USB
+    while(!stdio_usb_connected()){
+        sleep_ms(1000);
+        printf(".\n");
+    }
+    #endif
+
     rtc_init();
     bool ret = status_led_init();
     hard_assert(ret);
     rtc_enable_alarm();
     InputManager inputManager;
-    dht_t dht;
-    dht_init(&dht,DHT11,pio0,17,true);
-    AppContext app_context_instance;
+
+    printf("Input established\n");
+    TempSensorInput tempSensorInput;
+    // dht_t dht;
+    // dht_init(&dht,DHT11,pio0,17,true);
+    printf("DHT established\n");
+    DisplayManager displayManager;
+    printf("Display established\n");
+    AppContext app_context_instance(displayManager);
+    printf("App established\n");
+
+    displayManager.clear();
 
 
-
-    while(!stdio_usb_connected()){
-        sleep_ms(1000);
-        printf(".\n");
-    }
 
     datetime_t date_mut = {};
 
     rtc_set_alarm(&update_alarm, update_alarm_callback);
 
     while (true) {
-        std::optional<std::pair<float,float>> results = measure_dht(dht);
-        const Input entered_input = inputManager.poll_input();
-        std::pair<float,float> res_def = results.value_or({-1,-1});
-        printf("Humidity: %f, Temp: %f ",res_def.first,res_def.second);
-        app_context_instance.dispatch(entered_input);
+        displayManager.clear(false);
+        auto env_input = tempSensorInput.try_poll_cached();
+        auto entered_input = inputManager.poll_input();
+        app_context_instance.dispatch(entered_input,env_input);
+        displayManager.commit();
         sleep_ms(10);
     }
 
