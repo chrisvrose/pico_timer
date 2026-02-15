@@ -5,7 +5,6 @@
 #include <pico/util/datetime.h>
 #include "context.hh"
 
-AppContext app_context_instance;
 
 char datebuf[256]={0};
 inline void print_date(){
