@@ -90,7 +90,7 @@ int main(){
         auto entered_input = inputManager.poll_input();
         app_context_instance.dispatch(entered_input,env_input);
         displayManager.commit();
-        sleep_ms(10);
+        sleep_ms(100);
     }
 
     return 0;

@@ -10,7 +10,7 @@ class TempSensorInput {
     dht_t dht;
     std::optional<TempHumidityMeasurement> lastMeasurement;
     uint8_t cycleCount = 0;
-    const uint8_t collectOn = 50;
+    const uint8_t collectOn = 10;
 
     void try_poll();
     public:
