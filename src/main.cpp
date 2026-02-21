@@ -6,7 +6,6 @@
 #include <pico/stdio_usb.h>
 #include <pico/time.h>
 #include <pico/types.h>
-#include "dht.h"
 #include "hardware/rtc.h"
 #include "context.hh"
 #include "input.hh"

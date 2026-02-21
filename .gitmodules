@@ -4,3 +4,6 @@
 [submodule "libs/pico_dht"]
 	path = libs/pico_dht
 	url = git@github.com:vmilea/pico_dht.git
+[submodule "libs/pico-sdk"]
+	path = libs/pico-sdk
+	url = git@github.com:raspberrypi/pico-sdk.git

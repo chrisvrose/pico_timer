@@ -12,3 +12,17 @@ Initial setup uses:
 - [X] Initial temp and humidity on serial
 - [X] Output on display
 - [ ] Fetch time
+
+
+## Setup
+
+```bash
+# After cloning
+git submodule update --init --recursive
+
+# Generate build files
+cmake -B build
+
+# Build it (finally)
+cmake --build build -j`nproc`
+```

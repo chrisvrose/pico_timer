@@ -8,9 +8,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # set(PICO_BOARD pico_w)
 
 # Include build functions from Pico SDK
-# Someday, support relative sdk placement
-set(PICO_SDK_PATH /home/atreyab/Buildspace/pico-sdk)
-# set(PICO_SDK_PATH ${CMAKE_SOURCE_DIR}/libs/pico/pico-sdk)
+set(PICO_SDK_PATH ${CMAKE_SOURCE_DIR}/libs/pico-sdk)
 
 include(${PICO_SDK_PATH}/external/pico_sdk_import.cmake)
 
