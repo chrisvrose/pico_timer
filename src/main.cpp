@@ -7,10 +7,10 @@
 #include <pico/time.h>
 #include <pico/types.h>
 #include "hardware/rtc.h"
-#include "context.hh"
+#include "app.hh"
 #include "input.hh"
-#include "display.hh"
-#include "temp_dht.hh"
+#include "hw/display.hh"
+#include "hw/temp_dht.hh"
 
 extern "C"{
 #include "pico/status_led.h"
@@ -72,7 +72,7 @@ int main(){
     printf("DHT established\n");
     DisplayManager displayManager;
     printf("Display established\n");
-    AppContext app_context_instance(displayManager);
+    App app_context_instance(displayManager);
     printf("App established\n");
 
     displayManager.clear();

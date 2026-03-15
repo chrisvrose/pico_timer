@@ -4,16 +4,13 @@
 #include <pico/time.h>
 #include <pico/types.h>
 #include <pico/util/datetime.h>
-#include "context.hh"
-#include "display.hh"
-#include "temp_dht.hh"
+#include "app.hh"
 
 
-char datebuf[256]={0};
-inline void print_date(DisplayManager& displayManager){
+char datebuf[64]={0};
 
-}
-void AppContext::dispatch(Input enteredInput, std::optional<TempHumidityMeasurement>& env_input){
+
+void App::dispatch(Input enteredInput, std::optional<TempHumidityMeasurement>& env_input){
     switch (this->currentMode) {
     case USUAL:
         dispatch_usual(enteredInput, env_input);
@@ -25,7 +22,7 @@ void AppContext::dispatch(Input enteredInput, std::optional<TempHumidityMeasurem
       break;
     }
 }
-void AppContext::dispatch_usual(Input entered_input, std::optional<TempHumidityMeasurement>& env_input){
+void App::dispatch_usual(Input entered_input, std::optional<TempHumidityMeasurement>& env_input){
     datetime_t date_mut;
     rtc_get_datetime(&date_mut);
     datetime_to_str(datebuf,sizeof(datebuf),&date_mut);
@@ -41,7 +38,7 @@ void AppContext::dispatch_usual(Input entered_input, std::optional<TempHumidityM
     displayManager.drawTextWrapped(envText,0,32);
 
 }
-void AppContext::dispatch_sync(Input entered_input){
+void App::dispatch_sync(Input entered_input){
     // printf("We will pretend to sync time\n");
     displayManager.drawText("Syncing");
     sleep_ms(1000);

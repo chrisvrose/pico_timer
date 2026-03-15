@@ -3,7 +3,7 @@
 #include "textRenderer/TextRenderer.h"
 #include <cstdint>
 #include <cstdio>
-#include <display.hh>
+#include <hw/display.hh>
 #include <hardware/gpio.h>
 #include <hardware/i2c.h>
 #include <hardware/structs/io_bank0.h>

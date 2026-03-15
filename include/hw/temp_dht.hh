@@ -1,7 +1,7 @@
 #pragma once
-#include "dht.h"
 #include <cstdint>
 #include <optional>
+#include <dht.h>
 struct TempHumidityMeasurement{
     float temp_in_c;
     float humidity_in_percentage;

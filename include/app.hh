@@ -1,8 +1,8 @@
 #pragma once
 #include "input.hh"
 #include <pico/types.h>
-#include "display.hh"
-#include "temp_dht.hh"
+#include "hw/display.hh"
+#include "hw/temp_dht.hh"
 
 enum CurrentMode{
     USUAL,
@@ -10,13 +10,13 @@ enum CurrentMode{
     SYNC_TIME
 };
 
-struct AppContext{
+struct App{
     DisplayManager& displayManager;
     datetime_t alarm_timer = {};
     char temperature[10] = {0};
     CurrentMode currentMode = SYNC_TIME;
 
-    AppContext(DisplayManager& displayManager):displayManager(displayManager){
+    App(DisplayManager& displayManager):displayManager(displayManager){
     }
 
     void dispatch(Input input, std::optional<TempHumidityMeasurement>&);
@@ -28,4 +28,4 @@ struct AppContext{
         this->currentMode = newState;
     }
 };
-extern AppContext app_context_instance;
+extern App app_context_instance;

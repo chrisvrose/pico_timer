@@ -11,6 +11,4 @@ class InputManager{
     inline Input poll_input(){
         return NO_INPUT;
     }
-
-
 };

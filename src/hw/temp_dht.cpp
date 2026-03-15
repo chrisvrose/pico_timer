@@ -1,8 +1,9 @@
-#include "temp_dht.hh"
-#include "dht.h"
 #include <cstdio>
 #include <optional>
 #include <pico/time.h>
+#include <dht.h>
+
+#include "hw/temp_dht.hh"
 
 TempSensorInput::TempSensorInput(){
     dht_init(&this->dht, DHT11, pio0, 17,true);

@@ -31,10 +31,10 @@ add_subdirectory(libs/pico_dht/dht)
 
 # Tell CMake where to find the executable source file
 add_executable(clock
+    src/hw/display.cpp
+    src/hw/temp_dht.cpp
+    src/app.cpp
     src/main.cpp
-    src/context.cpp
-    src/display.cpp
-    src/temp_dht.cpp
 )
 
 # Create map/bin/hex/uf2 files
