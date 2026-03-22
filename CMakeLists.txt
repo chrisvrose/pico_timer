@@ -35,6 +35,7 @@ add_executable(clock
     src/hw/temp_dht.cpp
     src/app.cpp
     src/main.cpp
+    src/input.cpp
 )
 
 # Create map/bin/hex/uf2 files
