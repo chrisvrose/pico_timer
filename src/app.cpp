@@ -4,13 +4,20 @@
 #include <pico/time.h>
 #include <pico/types.h>
 #include <pico/util/datetime.h>
+#include <string>
 #include "app.hh"
-
 
 char datebuf[64]={0};
 
 
-void App::dispatch(Input enteredInput, std::optional<TempHumidityMeasurement>& env_input){
+/**
+ * Main app loop
+ * This is represented as a standard input.
+ * Input -> (state->state) -> output
+ */
+void App::dispatch(std::optional<TempHumidityMeasurement>& env_input){
+    Input enteredInput = inputManager.poll_input();
+
     switch (this->currentMode) {
     case USUAL:
         dispatch_usual(enteredInput, env_input);
@@ -38,19 +45,17 @@ void App::dispatch_usual(Input entered_input, std::optional<TempHumidityMeasurem
     displayManager.drawTextWrapped(envText,0,32);
 
 }
+
 void App::dispatch_sync(Input entered_input){
     // printf("We will pretend to sync time\n");
-    displayManager.drawText("Syncing");
-    sleep_ms(1000);
-    datetime_t init_date = {
-        .year=2026,
-        .month=02,
-        .day=010,
-        .hour=13,
-        .min=23,
-        .sec=58
-    };
-    rtc_set_datetime(&init_date);
+    displayManager.drawText("Syncing Time");
+    std::optional<datetime_t> init_date = inputManager.poll_time_from_stdio();
+
+    if(init_date.has_value()){
+        printf("Has successfully polled data");
+        rtc_set_datetime(&init_date.value());
+        this->transition(CurrentMode::USUAL);
+    }
+    // rtc_set_datetime(&init_date);
     sleep_us(1000);
-    this->transition(CurrentMode::USUAL);
 }

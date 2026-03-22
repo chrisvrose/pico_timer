@@ -12,14 +12,15 @@ enum CurrentMode{
 
 struct App{
     DisplayManager& displayManager;
+    InputManager& inputManager;
     datetime_t alarm_timer = {};
     char temperature[10] = {0};
     CurrentMode currentMode = SYNC_TIME;
 
-    App(DisplayManager& displayManager):displayManager(displayManager){
+    App(DisplayManager& displayManager,InputManager& inputManager):displayManager(displayManager),inputManager(inputManager){
     }
 
-    void dispatch(Input input, std::optional<TempHumidityMeasurement>&);
+    void dispatch(std::optional<TempHumidityMeasurement>&);
 
     private:
     void dispatch_usual(Input input, std::optional<TempHumidityMeasurement>&);

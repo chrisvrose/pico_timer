@@ -72,7 +72,7 @@ int main(){
     printf("DHT established\n");
     DisplayManager displayManager;
     printf("Display established\n");
-    App app_context_instance(displayManager);
+    App app_context_instance(displayManager,inputManager);
     printf("App established\n");
 
     displayManager.clear();
@@ -86,8 +86,7 @@ int main(){
     while (true) {
         displayManager.clear(false);
         auto env_input = tempSensorInput.try_poll_cached();
-        auto entered_input = inputManager.poll_input();
-        app_context_instance.dispatch(entered_input,env_input);
+        app_context_instance.dispatch(env_input);
         displayManager.commit();
         sleep_ms(100);
     }
