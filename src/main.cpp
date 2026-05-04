@@ -35,19 +35,6 @@ void update_alarm_callback(){
     led_state = !led_state;
 }
 
-std::optional<std::pair<float,float>> measure_dht(dht_t dht){
-    dht_start_measurement(&dht);
-    sleep_ms(100);
-    float humidity = 0,temp_c=0;
-    dht_result_t res = dht_finish_measurement_blocking(&dht, &humidity,&temp_c);
-    if(res==DHT_RESULT_OK){
-        return std::optional<std::pair<float,float>>({humidity,temp_c});
-    }else{
-        printf("Print READOUT FAILED\n");
-    }
-    return std::optional<std::pair<float,float>>();
-
-}
 
 int main(){
     stdio_init_all();

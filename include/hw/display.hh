@@ -10,7 +10,7 @@ class DisplayManager{
     ~DisplayManager();
 
     void drawText(std::string text, uint8_t x_offset=0,uint8_t y_offset=0);
-    void drawTextWrapped(std::string text, uint8_t x_offset=0,uint8_t y_offset=0);
+    void drawTextWrapped(const std::string& text, uint8_t x_offset=0,uint8_t y_offset=0);
     void commit();
     void clear(bool commit=true);
 };

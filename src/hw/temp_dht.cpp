@@ -12,24 +12,23 @@ TempSensorInput::TempSensorInput(){
 
 // 0->start measure ...     collectOn -> save measure and write out, set back to 0
 void TempSensorInput::try_poll(){
-    printf("DHT Cpoll %hhud\n",cycleCount);
-    if(cycleCount==0){
+    printf("DHT Cpoll %hhu\n",cycleCount);
+    if(cycleCount==0) {
         dht_start_measurement(&this->dht);
         cycleCount++;
-    }else if(cycleCount==collectOn){
+    } else if(cycleCount==collectOn) {
         float humidity = 0,temp_c=0;
         dht_result_t res = dht_finish_measurement_blocking(&dht, &humidity,&temp_c);
-        if(res==DHT_RESULT_OK){
+        if(res==DHT_RESULT_OK) {
             lastMeasurement = std::make_optional(TempHumidityMeasurement {
                 .temp_in_c=temp_c,
                 .humidity_in_percentage=humidity
             });
-        }else{
+        } else {
             printf("Print READOUT FAILED\n");
         }
-
         cycleCount = 0;
-    }else{
+    } else {
         cycleCount++;
     }
 }
