@@ -1,5 +1,4 @@
 #include "ssd1306.h"
-#include "textRenderer/8x8_font.h"
 #include "textRenderer/TextRenderer.h"
 #include <algorithm>
 #include <cstdint>
@@ -15,7 +14,7 @@
 #define I2C_DISPLAY_ADDRESS 0x3C
 
 DisplayManager::DisplayManager(){
-    i2c_init(i2c1, 500'000);
+    i2c_init(i2c1, 50'000);
     printf("I2c established\n");
     gpio_set_function(14,GPIO_FUNC_I2C);
     gpio_set_function(15,GPIO_FUNC_I2C);
@@ -36,8 +35,6 @@ void DisplayManager::drawText(std::string text, uint8_t x_offset,uint8_t y_offse
 
 void DisplayManager::drawTextWrapped(const std::string& text,uint8_t x_offset, uint8_t y_offset){
     char buffer[17] = {0};
-    const uint8_t MAX_ROWS=4;
-    const uint8_t MAX_NUM_CHARS_IN_LINE=128/8;
 
     uint8_t i=0;//saved index (whatever has been printed already)
     uint8_t row=0;// row number
@@ -47,15 +44,15 @@ void DisplayManager::drawTextWrapped(const std::string& text,uint8_t x_offset, u
         memcpy(buffer,text.c_str()+i,copy_len);
         buffer[copy_len] = 0;
 
-        pico_ssd1306::drawText(this->display, font_8x8, buffer, x_offset,y_offset+row*8);
+        pico_ssd1306::drawText(this->display, FONT_USED, buffer, x_offset,row_to_pixels_offset_y(row,y_offset));
     }
 }
 
 void DisplayManager::clear(bool commit){
     // TODO fill
     this->display->clear();
-    if(commit){
-        this->display->sendBuffer();
+    if (commit) {
+      this->display->sendBuffer();
     }
 }
 

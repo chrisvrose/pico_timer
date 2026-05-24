@@ -1,6 +1,4 @@
 #include <cstdio>
-#include <optional>
-#include <utility>
 #include <pico/assert.h>
 #include <pico/stdio.h>
 #include <pico/stdio_usb.h>

@@ -54,6 +54,8 @@ target_link_libraries(clock
     hardware_rtc
     pico_status_led
     dht
+    tinyusb_device
+    tinyusb_board
     # pico_cyw43_arch_none
 )
 
