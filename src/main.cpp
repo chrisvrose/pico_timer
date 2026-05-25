@@ -9,14 +9,13 @@
 #include "input.hh"
 #include "hw/display.hh"
 #include "hw/temp_dht.hh"
+#include "config.hh"
 
 extern "C"{
 #include "pico/status_led.h"
 }
 
 bool led_state = true;
-
-// #define WAIT_FOR_USB
 
 const datetime_t update_alarm = {
     .year=-1,
@@ -37,12 +36,12 @@ void update_alarm_callback(){
 int main(){
     stdio_init_all();
 
-    #ifdef WAIT_FOR_USB
-    while(!stdio_usb_connected()){
-        sleep_ms(1000);
-        printf(".\n");
+    if constexpr (WAIT_FOR_USB) {
+        while (!stdio_usb_connected()) {
+            sleep_ms(1000);
+            printf(".\n");
+        }
     }
-    #endif
 
     rtc_init();
     bool ret = status_led_init();
@@ -67,7 +66,7 @@ int main(){
         auto env_input = tempSensorInput.try_poll_cached();
         app_context_instance.dispatch(env_input);
         displayManager.commit();
-        sleep_ms(100);
+        sleep_ms(TICK_RATE_MS);
     }
 
     return 0;

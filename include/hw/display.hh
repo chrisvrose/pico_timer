@@ -1,6 +1,7 @@
 #pragma once
 #include "ssd1306.h"
 #include <cstdint>
+#include <memory>
 #include <string>
 
 
@@ -23,12 +24,11 @@ constexpr uint32_t row_to_pixels_offset_y(uint32_t row_num,uint32_t offset = 0){
 
 class DisplayManager{
     private:
-    pico_ssd1306::SSD1306* display;
+    std::unique_ptr<pico_ssd1306::SSD1306> display;
     public:
     DisplayManager();
-    ~DisplayManager();
 
-    void drawText(std::string text, uint8_t x_offset=0,uint8_t y_offset=0);
+    void drawText(const std::string& text, uint8_t x_offset=0,uint8_t y_offset=0);
     void drawTextWrapped(const std::string& text, uint8_t x_offset=0,uint8_t y_offset=0);
     void commit();
     void clear(bool commit=true);

@@ -8,8 +8,6 @@
 #include "app.hh"
 
 char datebuf[64]={0};
-
-
 /**
  * Main app loop
  * This is represented as a standard input.

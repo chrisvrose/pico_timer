@@ -6,8 +6,8 @@
 #include <hw/display.hh>
 #include <hardware/gpio.h>
 #include <hardware/i2c.h>
-#include <hardware/structs/io_bank0.h>
 #include "textRenderer/8x8_font.h"
+#include <memory>
 #include <string>
 
 
@@ -26,12 +26,12 @@ DisplayManager::DisplayManager(){
     sleep_ms(250);
 
 
-    this->display = new pico_ssd1306::SSD1306(I2C_DISPLAY_PORT,I2C_DISPLAY_ADDRESS,pico_ssd1306::Size::W128xH64);
+    this->display = std::make_unique<pico_ssd1306::SSD1306>(I2C_DISPLAY_PORT,I2C_DISPLAY_ADDRESS,pico_ssd1306::Size::W128xH64);
     this->display->setOrientation(0);
 }
 
-void DisplayManager::drawText(std::string text, uint8_t x_offset,uint8_t y_offset){
-    pico_ssd1306::drawText(this->display, font_8x8,text.c_str(),x_offset,y_offset);
+void DisplayManager::drawText(const std::string& text, uint8_t x_offset,uint8_t y_offset){
+    pico_ssd1306::drawText(this->display.get(), font_8x8,text.c_str(),x_offset,y_offset);
 }
 
 void DisplayManager::drawTextWrapped(const std::string& text,uint8_t x_offset, uint8_t y_offset){
@@ -42,12 +42,11 @@ void DisplayManager::drawTextWrapped(const std::string& text,uint8_t x_offset, u
         memcpy(buffer,text.c_str()+i_string_index,copy_len);
         buffer[copy_len] = 0;
 
-        pico_ssd1306::drawText(this->display, FONT_USED, buffer, x_offset,row_to_pixels_offset_y(row_number,y_offset));
+        pico_ssd1306::drawText(this->display.get(), FONT_USED, buffer, x_offset,row_to_pixels_offset_y(row_number,y_offset));
     }
 }
 
 void DisplayManager::clear(bool commit){
-    // TODO fill
     this->display->clear();
     if (commit) {
       this->display->sendBuffer();
@@ -56,8 +55,4 @@ void DisplayManager::clear(bool commit){
 
 void DisplayManager::commit(){
     this->display->sendBuffer();
-}
-
-DisplayManager::~DisplayManager(){
-    delete this->display;
 }

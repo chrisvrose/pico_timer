@@ -14,7 +14,6 @@ struct App{
     DisplayManager& displayManager;
     InputManager& inputManager;
     datetime_t alarm_timer = {};
-    char temperature[10] = {0};
     CurrentMode currentMode = SYNC_TIME;
 
     App(DisplayManager& displayManager,InputManager& inputManager):displayManager(displayManager),inputManager(inputManager){

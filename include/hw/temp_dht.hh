@@ -7,6 +7,7 @@ struct TempHumidityMeasurement{
     float humidity_in_percentage;
 };
 class TempSensorInput {
+    private:
     dht_t dht;
     std::optional<TempHumidityMeasurement> lastMeasurement;
     uint8_t cycleCount = 0;
