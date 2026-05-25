@@ -7,6 +7,7 @@
 #include <hardware/gpio.h>
 #include <hardware/i2c.h>
 #include <hardware/structs/io_bank0.h>
+#include "textRenderer/8x8_font.h"
 #include <string>
 
 
@@ -36,15 +37,12 @@ void DisplayManager::drawText(std::string text, uint8_t x_offset,uint8_t y_offse
 void DisplayManager::drawTextWrapped(const std::string& text,uint8_t x_offset, uint8_t y_offset){
     char buffer[17] = {0};
 
-    uint8_t i=0;//saved index (whatever has been printed already)
-    uint8_t row=0;// row number
-
-    for(uint8_t i=0,row=0;row<MAX_ROWS && i<text.length();i+=MAX_NUM_CHARS_IN_LINE,row+=1){
-        uint8_t copy_len = std::min(MAX_NUM_CHARS_IN_LINE,(uint8_t)(text.length()-i));
-        memcpy(buffer,text.c_str()+i,copy_len);
+    for(uint8_t i_string_index=0,row_number=0;row_number<MAX_ROWS && i_string_index<text.length();i_string_index+=MAX_NUM_CHARS_IN_LINE,row_number+=1){
+        uint8_t copy_len = std::min(MAX_NUM_CHARS_IN_LINE,(uint8_t)(text.length()-i_string_index));
+        memcpy(buffer,text.c_str()+i_string_index,copy_len);
         buffer[copy_len] = 0;
 
-        pico_ssd1306::drawText(this->display, FONT_USED, buffer, x_offset,row_to_pixels_offset_y(row,y_offset));
+        pico_ssd1306::drawText(this->display, FONT_USED, buffer, x_offset,row_to_pixels_offset_y(row_number,y_offset));
     }
 }
 

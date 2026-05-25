@@ -29,4 +29,3 @@ struct App{
         this->currentMode = newState;
     }
 };
-extern App app_context_instance;

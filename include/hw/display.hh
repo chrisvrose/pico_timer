@@ -1,6 +1,5 @@
 #pragma once
 #include "ssd1306.h"
-#include "textRenderer/8x8_font.h"
 #include <cstdint>
 #include <string>
 
@@ -13,7 +12,6 @@ const uint8_t FONT_WIDTH = 8;
 const uint8_t FONT_HEIGHT = 8;
 
 const uint8_t MAX_ROWS = SCREEN_HEIGHT / FONT_HEIGHT;
-// const uint8_t MAX_ROWS=4;
 
 const uint8_t MAX_NUM_CHARS_IN_LINE = SCREEN_WIDTH / FONT_WIDTH;
 

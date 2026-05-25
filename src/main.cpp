@@ -52,8 +52,6 @@ int main(){
 
     printf("Input established\n");
     TempSensorInput tempSensorInput;
-    // dht_t dht;
-    // dht_init(&dht,DHT11,pio0,17,true);
     printf("DHT established\n");
     DisplayManager displayManager;
     printf("Display established\n");
@@ -61,10 +59,6 @@ int main(){
     printf("App established\n");
 
     displayManager.clear();
-
-
-
-    datetime_t date_mut = {};
 
     rtc_set_alarm(&update_alarm, update_alarm_callback);
 
