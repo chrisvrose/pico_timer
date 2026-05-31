@@ -5,38 +5,39 @@
 - `index.md`: Main state machine + architecture overview
 - `timesync.md`: USB time sync + host helper (`timesync-sv`)
 
+## Goals
+
+- [X] Initial time on serial
+- [X] Initial temp and humidity on serial
+- [X] Output on display
+- [X] Fetch time
+- [ ] Interactivity from timesync-sv
+  - [X] Idling - timesync-sv
+  - [ ] Set time from timesync-sv
+  - [ ] Set alarm from timesync-sv
+- [ ] pico_timer
+  - [ ] UI - Have a better UI
+- [ ] Alarm
+  - [ ] Set alarm
+  - [ ] Sync alarm
+  - [ ] Ring alarm
+  - [ ] Snooze alarm
+- [ ] pico_timer components expansion
+  - [ ] Battery powered
+  - [ ] Box
+
+
 ## State Machine
 
 The application operates on a state machine with three main states:
 
-### State Diagram
-
-```mermaid
-stateDiagram-v2
-    [*] --> SYNC_TIME
-
-    SYNC_TIME --> USUAL: valid datetime
-    SYNC_TIME --> SYNC_TIME: invalid input / parse fail
-
-    USUAL --> SET_ALARM: PRESSED_BUTTON
-
-    SET_ALARM --> USUAL: confirm
-    SET_ALARM --> USUAL: cancel
-
-    note right of SYNC_TIME: Display "Syncing Time"<br/>Poll serial/USB for YYYY-MM-DD HH:MM:SS<br/>Set RTC on success
-    note right of USUAL: Display time + temperature + humidity<br/>Tick every TICK_RATE_MS<br/>Poll DHT via cached reads
-    note right of SET_ALARM: Alarm config UI (future)<br/>Adjust via buttons (future)
-```
-
-### State Details
+### Clock States
 
 #### SYNC_TIME
 - **Purpose:** Initialize the RTC with the correct current time
 - **Entry:** On boot (initial state)
 - **Exit Condition:** Valid datetime received and set in RTC
 - **Display:** "Syncing Time"
-- **Input:** Serial/USB input in format `YYYY-MM-DD HH:MM:SS`
-- **Error Handling:** Invalid format → display error, retry
 
 #### USUAL
 - **Purpose:** Normal clock operation with environment monitoring
@@ -53,7 +54,7 @@ stateDiagram-v2
 - **Entry:** User presses button in USUAL mode
 - **Exit Condition:** Alarm set OR user cancels
 - **Display:** Alarm configuration UI (to be designed)
-- **Input:** Button presses to adjust hour/minute (future)
+- **Input:** User syncs from timeserver
 
 ### Transitions
 
@@ -80,7 +81,6 @@ stateDiagram-v2
   - SDA: GPIO 14
   - SCL: GPIO 15
   - Address: 0x3C
-  - Speed: 50kHz
 
 - **DHT11 Sensor:**
   - Data: GPIO 17
@@ -95,10 +95,3 @@ stateDiagram-v2
 See `include/config.hh` for compile-time configuration:
 - `WAIT_FOR_USB`: Wait for USB connection before starting
 - `TICK_RATE_MS`: Main loop tick rate (100ms default)
-
-## Next Steps
-
-- [ ] Implement `InputManager::poll_time_from_stdio()` for time sync
-- [ ] Implement button input polling
-- [ ] Implement SET_ALARM state handler
-- [ ] Add alarm trigger action

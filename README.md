@@ -6,14 +6,6 @@ Initial setup uses:
 - SSD1306 Display (i2c)
 - DHT11 temp+humidity sensor
 
-## Goals
-
-- [X] Initial time on serial
-- [X] Initial temp and humidity on serial
-- [X] Output on display
-- [ ] Fetch time
-
-
 ## Setup
 
 ```bash
@@ -26,3 +18,7 @@ cmake -B build
 # Build it (finally)
 cmake --build build -j`nproc`
 ```
+
+## Docs
+
+Read more on getting started on the [documentation](./docs/index.md)
