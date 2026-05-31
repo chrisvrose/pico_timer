@@ -1,2 +1,4 @@
 build
 .zed
+util/certs/*
+!util/certs/.keep

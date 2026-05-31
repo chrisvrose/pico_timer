@@ -10,6 +10,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Include build functions from Pico SDK
 set(PICO_SDK_PATH ${CMAKE_SOURCE_DIR}/libs/pico-sdk)
 
+
+
 include(${PICO_SDK_PATH}/external/pico_sdk_import.cmake)
 
 # Set name of project (as PROJECT_NAME) and C/C   standards
@@ -49,15 +51,16 @@ target_include_directories(clock PRIVATE
 # Link to pico_stdlib (gpio, time, etc. functions)
 target_link_libraries(clock
     pico_stdlib
+    pico_time
     pico_ssd1306
     hardware_i2c
     hardware_rtc
     pico_status_led
     dht
-    tinyusb_device
-    tinyusb_board
-    # pico_cyw43_arch_none
 )
+
+# Pico USB setup
+target_compile_definitions(clock PUBLIC USBD_VID=0xCA1F USBD_PID=0x51e9 USBD_PRODUCT="Clock")
 
 # Enable usb output, disable uart output
 pico_enable_stdio_usb(clock 1)

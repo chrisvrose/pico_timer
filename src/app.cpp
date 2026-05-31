@@ -5,6 +5,7 @@
 #include <pico/types.h>
 #include <pico/util/datetime.h>
 #include <string>
+#include <sys/unistd.h>
 #include "app.hh"
 
 char datebuf[64]={0};
@@ -29,8 +30,12 @@ void App::dispatch(std::optional<TempHumidityMeasurement>& env_input){
 }
 void App::dispatch_usual(Input entered_input, std::optional<TempHumidityMeasurement>& env_input){
     datetime_t date_mut;
-    rtc_get_datetime(&date_mut);
+    bool did_get_time = rtc_get_datetime(&date_mut);
+
+    fflush(NULL);
+    memset(datebuf,0,sizeof(datebuf));
     datetime_to_str(datebuf,sizeof(datebuf),&date_mut);
+    fflush(NULL);
     displayManager.drawTextWrapped(datebuf);
 
     char envText[17]={0};
@@ -47,13 +52,19 @@ void App::dispatch_usual(Input entered_input, std::optional<TempHumidityMeasurem
 void App::dispatch_sync(Input entered_input){
     // printf("We will pretend to sync time\n");
     displayManager.drawText("Syncing Time");
-    std::optional<datetime_t> init_date = inputManager.poll_time_from_stdio();
+    std::optional<datetime_t> init_date = inputManager.request_time_from_com();
 
     if(init_date.has_value()){
         printf("Has successfully polled data");
-        rtc_set_datetime(&init_date.value());
-        this->transition(CurrentMode::USUAL);
+        bool was_set =true;// rtc_set_datetime(&init_date.value());
+        if(was_set) {
+            this->transition(CurrentMode::USUAL);
+        }else{
+            printf("Could not set the time\n");
+
+        }
     }
     // rtc_set_datetime(&init_date);
-    sleep_us(1000);
+    sleep_us(20);
+    // this->transition(USUAL);
 }

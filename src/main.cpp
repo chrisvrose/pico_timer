@@ -26,6 +26,15 @@ const datetime_t update_alarm = {
     .min=-1,
     .sec=00,
 };
+static const datetime_t DEFAULT_DATETIME_2000_01_01 = {
+    .year  = 2000,
+    .month = 1,
+    .day   = 1,
+    .dotw  = 6,   // 0=Sunday ... 6=Saturday
+    .hour  = 0,
+    .min   = 0,
+    .sec   = 0,
+};
 
 void update_alarm_callback(){
     status_led_set_state(led_state);
@@ -44,6 +53,7 @@ int main(){
     }
 
     rtc_init();
+    rtc_set_datetime(&DEFAULT_DATETIME_2000_01_01);
     bool ret = status_led_init();
     hard_assert(ret);
     rtc_enable_alarm();
