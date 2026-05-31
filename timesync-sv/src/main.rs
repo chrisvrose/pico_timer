@@ -1,11 +1,9 @@
+use bufstream::BufStream;
+use serialport::{SerialPort, SerialPortInfo, SerialPortType, UsbPortInfo};
 use std::{
-    io::{BufRead, Write},
+    io::{BufRead, ErrorKind, Write},
     time::Duration,
 };
-
-use bufstream::BufStream;
-use chrono::Datelike;
-use serialport::{Error, SerialPort, SerialPortInfo, SerialPortType, UsbPortInfo};
 
 fn main() {
     println!("Hello, world!");
@@ -31,9 +29,16 @@ fn interact(mut port: Box<dyn SerialPort>) -> ! {
     let mut buffered_stream = BufStream::new(port.as_mut());
     loop {
         let mut pi_output = String::with_capacity(32);
-        let _pi_output_size_res = buffered_stream
-            .read_line(&mut pi_output)
-            .expect("Failed to read line");
+
+        let pi_output_size_res = buffered_stream.read_line(&mut pi_output);
+
+        match pi_output_size_res {
+            Err(e) if e.kind() == ErrorKind::TimedOut => {}
+            Err(err) => {
+                panic!("error {}", err);
+            }
+            Ok(_) => {}
+        }
 
         let output = process_input(&pi_output);
         if let Some(output) = output {
@@ -67,6 +72,7 @@ fn process_input(input: &String) -> Option<String> {
             println!("Pico Timed out, reset");
             None
         }
+        s if s.is_empty() => None,
         s if s.starts_with("# ") => {
             println!("Debug: {}", s);
             None
