@@ -25,7 +25,7 @@ void TempSensorInput::try_poll(){
                 .humidity_in_percentage=humidity
             });
         } else {
-            printf("DHT READOUT FAILED\n");
+            printf("# DHT READOUT FAILED\n");
         }
         cycleCount = 0;
     } else {

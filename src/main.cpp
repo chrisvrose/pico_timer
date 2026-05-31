@@ -59,13 +59,13 @@ int main(){
     rtc_enable_alarm();
     InputManager inputManager;
 
-    printf("Input established\n");
+    printf("# Input established\n");
     TempSensorInput tempSensorInput;
-    printf("DHT established\n");
+    printf("# DHT established\n");
     DisplayManager displayManager;
-    printf("Display established\n");
+    printf("# Display established\n");
     App app_context_instance(displayManager,inputManager);
-    printf("App established\n");
+    printf("# App established\n");
 
     displayManager.clear();
 

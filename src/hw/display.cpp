@@ -16,12 +16,12 @@
 
 DisplayManager::DisplayManager(){
     i2c_init(i2c1, 50'000);
-    printf("I2c established\n");
+    printf("# I2c established\n");
     gpio_set_function(14,GPIO_FUNC_I2C);
     gpio_set_function(15,GPIO_FUNC_I2C);
     gpio_pull_up(14);
     gpio_pull_up(15);
-    printf("I2c pullups established\n");
+    printf("# I2c pullups established\n");
 
     sleep_ms(250);
 

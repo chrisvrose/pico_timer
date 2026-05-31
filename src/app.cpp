@@ -55,12 +55,12 @@ void App::dispatch_sync(Input entered_input){
     std::optional<datetime_t> init_date = inputManager.request_time_from_com();
 
     if(init_date.has_value()){
-        printf("Has successfully polled data");
-        bool was_set =true;// rtc_set_datetime(&init_date.value());
+        printf("# Has successfully polled data");
+        bool was_set = rtc_set_datetime(&init_date.value());
         if(was_set) {
             this->transition(CurrentMode::USUAL);
-        }else{
-            printf("Could not set the time\n");
+        } else {
+            printf("# Could not set the time\n");
 
         }
     }
