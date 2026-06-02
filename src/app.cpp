@@ -68,6 +68,12 @@ void App::draw_temp_humidity(std::optional<TempHumidityMeasurement>& env_input){
 void App::dispatch_sync(Input entered_input){
     // printf("We will pretend to sync time\n");
     displayManager.drawText("Syncing Time");
+
+    char left_ticks_text[32] = {};
+
+    snprintf(left_ticks_text, 32, "TTS: %d",20-ticks_in_state);
+
+    displayManager.drawTextWrapped(left_ticks_text,0,32);
     std::optional<datetime_t> init_date = inputManager.request_time_from_com();
 
     if(init_date.has_value()){
@@ -80,10 +86,11 @@ void App::dispatch_sync(Input entered_input){
 
         }
     }
+    if(ticks_in_state>20){
+        this->transition(DEGRADED_NO_TIME);
+    }
     // rtc_set_datetime(&init_date);
     sleep_us(20);
 
-    if(ticks_in_state>20){
-        this->transition(USUAL);
-    }
+
 }

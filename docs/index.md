@@ -3,7 +3,7 @@
 ## Pages
 
 - `index.md`: Main state machine + architecture overview
-- `timesync.md`: USB time sync + host helper (`timesync-sv`)
+- `timesync.md`: USB time sync protocol + host helper (`timesync-sv`)
 
 ## Goals
 
@@ -29,7 +29,7 @@
 
 ## State Machine
 
-The application operates on a state machine with three main states:
+The application operates on a state machine with four main states:
 
 ### Clock States
 
@@ -54,7 +54,13 @@ The application operates on a state machine with three main states:
 - **Entry:** User presses button in USUAL mode
 - **Exit Condition:** Alarm set OR user cancels
 - **Display:** Alarm configuration UI (to be designed)
-- **Input:** User syncs from timeserver
+- **Input:** Buttons (future)
+
+#### DEGRADED_NO_TIME
+- **Purpose:** Show a safe UI when RTC time isn’t set
+- **Entry:** Timeout while waiting in `SYNC_TIME`
+- **Display:** "No date :(" (time placeholder)
+- **Exit Condition:** Host time sync succeeds
 
 ### Transitions
 
@@ -62,6 +68,8 @@ The application operates on a state machine with three main states:
 |------|-----|---------|-----------|
 | SYNC_TIME | USUAL | Valid datetime input | RTC successfully set |
 | SYNC_TIME | SYNC_TIME | Invalid input | Parse failed, retry |
+| SYNC_TIME | DEGRADED_NO_TIME | Timeout | No time received |
+| DEGRADED_NO_TIME | USUAL | Host time set | RTC successfully set |
 | USUAL | SET_ALARM | Button pressed | PRESSED_BUTTON |
 | SET_ALARM | USUAL | Alarm confirmed | Alarm saved |
 | SET_ALARM | USUAL | User cancelled | No changes |
