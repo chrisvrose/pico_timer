@@ -9,13 +9,16 @@
 #include "app.hh"
 
 char datebuf[64]={0};
+const char NO_DATE[] = "No date :(";
 /**
  * Main app loop
  * This is represented as a standard input.
  * Input -> (state->state) -> output
  */
-void App::dispatch(std::optional<TempHumidityMeasurement>& env_input){
+void App::dispatch(){
     Input enteredInput = inputManager.poll_input();
+    auto env_input = tempSensorInput.try_poll_cached();
+
 
     switch (this->currentMode) {
     case USUAL:
@@ -26,19 +29,33 @@ void App::dispatch(std::optional<TempHumidityMeasurement>& env_input){
     case SYNC_TIME:
         dispatch_sync(enteredInput);
       break;
+    case DEGRADED_NO_TIME:
+        dispatch_degraded_no_time(enteredInput, env_input);
+      break;
     }
+    this->ticks_in_state++;
 }
 void App::dispatch_usual(Input entered_input, std::optional<TempHumidityMeasurement>& env_input){
     datetime_t date_mut;
     bool did_get_time = rtc_get_datetime(&date_mut);
 
-    fflush(NULL);
     memset(datebuf,0,sizeof(datebuf));
     datetime_to_str(datebuf,sizeof(datebuf),&date_mut);
-    fflush(NULL);
     displayManager.drawTextWrapped(datebuf);
 
+    draw_temp_humidity(env_input);
+}
+
+void App::dispatch_degraded_no_time(Input entered_input, std::optional<TempHumidityMeasurement>& env_input){
+
+    displayManager.drawTextWrapped(NO_DATE);
+
+    draw_temp_humidity(env_input);
+}
+
+void App::draw_temp_humidity(std::optional<TempHumidityMeasurement>& env_input){
     char envText[17]={0};
+
     float temp = env_input.has_value()?env_input->temp_in_c:-1;
     snprintf(envText, 17, "T: %.2f 'C",temp);
     displayManager.drawTextWrapped(envText,0,24);
@@ -46,7 +63,6 @@ void App::dispatch_usual(Input entered_input, std::optional<TempHumidityMeasurem
     float humidity = env_input.has_value()?env_input->humidity_in_percentage:-1;
     snprintf(envText, 17, "H: %.2f %%",humidity);
     displayManager.drawTextWrapped(envText,0,32);
-
 }
 
 void App::dispatch_sync(Input entered_input){
@@ -66,5 +82,8 @@ void App::dispatch_sync(Input entered_input){
     }
     // rtc_set_datetime(&init_date);
     sleep_us(20);
-    // this->transition(USUAL);
+
+    if(ticks_in_state>20){
+        this->transition(USUAL);
+    }
 }

@@ -6,25 +6,34 @@
 
 enum CurrentMode{
     USUAL,
+    DEGRADED_NO_TIME,
     SET_ALARM,
     SYNC_TIME
 };
 
 struct App{
+    private:
     DisplayManager& displayManager;
     InputManager& inputManager;
+    TempSensorInput& tempSensorInput;
     datetime_t alarm_timer = {};
     CurrentMode currentMode = SYNC_TIME;
+    uint32_t ticks_in_state = 0;
 
-    App(DisplayManager& displayManager,InputManager& inputManager):displayManager(displayManager),inputManager(inputManager){
-    }
 
-    void dispatch(std::optional<TempHumidityMeasurement>&);
-
-    private:
     void dispatch_usual(Input input, std::optional<TempHumidityMeasurement>&);
+    void dispatch_degraded_no_time(Input input, std::optional<TempHumidityMeasurement>&);
     void dispatch_sync(Input input);
-    void transition(CurrentMode newState){
+
+    void draw_temp_humidity(std::optional<TempHumidityMeasurement>& env_input);
+
+    inline void transition(CurrentMode newState){
         this->currentMode = newState;
+        this->ticks_in_state = 0;
     }
+
+    public:
+    App(DisplayManager& displayManager,InputManager& inputManager, TempSensorInput& tempSensorInput):displayManager(displayManager),inputManager(inputManager),tempSensorInput(tempSensorInput){
+    }
+    void dispatch();
 };
