@@ -36,11 +36,12 @@ void App::dispatch(){
     this->ticks_in_state++;
 }
 void App::dispatch_usual(Input entered_input, std::optional<TempHumidityMeasurement>& env_input){
-    datetime_t date_mut;
-    bool did_get_time = rtc_get_datetime(&date_mut);
+    const std::optional<datetime_t> date_opt = rtcAdapter.get_time();
+    hard_assert(date_opt.has_value());
 
+    const datetime_t date = date_opt.value();
     memset(datebuf,0,sizeof(datebuf));
-    datetime_to_str(datebuf,sizeof(datebuf),&date_mut);
+    datetime_to_str(datebuf,sizeof(datebuf),&date);
     displayManager.drawTextWrapped(datebuf);
 
     draw_temp_humidity(env_input);
@@ -78,7 +79,9 @@ void App::dispatch_sync(Input entered_input){
 
     if(init_date.has_value()){
         printf("# Has successfully polled data");
-        bool was_set = rtc_set_datetime(&init_date.value());
+        const datetime_t init_date_val = init_date.value();
+        bool was_set = rtcAdapter.set_time(init_date_val);
+
         if(was_set) {
             this->transition(CurrentMode::USUAL);
         } else {
@@ -89,7 +92,6 @@ void App::dispatch_sync(Input entered_input){
     if(ticks_in_state>20){
         this->transition(DEGRADED_NO_TIME);
     }
-    // rtc_set_datetime(&init_date);
     sleep_us(20);
 
 

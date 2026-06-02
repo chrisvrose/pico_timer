@@ -35,6 +35,7 @@ add_subdirectory(libs/pico_dht/dht)
 add_executable(clock
     src/hw/display.cpp
     src/hw/temp_dht.cpp
+    src/hw/rtc.cpp
     src/app.cpp
     src/main.cpp
     src/input.cpp

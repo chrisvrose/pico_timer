@@ -4,8 +4,8 @@
 #include <pico/stdio_usb.h>
 #include <pico/time.h>
 #include <pico/types.h>
-#include "hardware/rtc.h"
 #include "app.hh"
+#include "hw/rtc.hh"
 #include "input.hh"
 #include "hw/display.hh"
 #include "hw/temp_dht.hh"
@@ -17,15 +17,6 @@ extern "C"{
 
 bool led_state = true;
 
-const datetime_t update_alarm = {
-    .year=-1,
-    .month=-1,
-    .day=-1,
-    .dotw=-1,
-    .hour=-1,
-    .min=-1,
-    .sec=00,
-};
 static const datetime_t DEFAULT_DATETIME_2000_01_01 = {
     .year  = 2000,
     .month = 1,
@@ -36,10 +27,6 @@ static const datetime_t DEFAULT_DATETIME_2000_01_01 = {
     .sec   = 0,
 };
 
-void update_alarm_callback(){
-    status_led_set_state(led_state);
-    led_state = !led_state;
-}
 
 
 int main(){
@@ -52,11 +39,11 @@ int main(){
         }
     }
 
-    rtc_init();
-    rtc_set_datetime(&DEFAULT_DATETIME_2000_01_01);
+    RTCAdapter rtc;
+    rtc.set_time(DEFAULT_DATETIME_2000_01_01);
     bool ret = status_led_init();
     hard_assert(ret);
-    rtc_enable_alarm();
+
     InputManager inputManager;
 
     printf("# Input established\n");
@@ -64,12 +51,11 @@ int main(){
     printf("# DHT established\n");
     DisplayManager displayManager;
     printf("# Display established\n");
-    App app_context_instance(displayManager,inputManager,tempSensorInput);
+    App app_context_instance(displayManager,inputManager,tempSensorInput,rtc);
     printf("# App established\n");
 
     displayManager.clear();
 
-    rtc_set_alarm(&update_alarm, update_alarm_callback);
 
     while (true) {
         displayManager.clear(false);
