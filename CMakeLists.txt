@@ -53,10 +53,9 @@ target_include_directories(clock PRIVATE
 target_link_libraries(clock
     pico_stdlib
     pico_time
-    pico_ssd1306
     hardware_i2c
     hardware_rtc
-    pico_status_led
+    pico_ssd1306
     dht
 )
 
