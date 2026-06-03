@@ -1,14 +1,9 @@
 #include "ssd1306.h"
 #include "textRenderer/TextRenderer.h"
-#include <algorithm>
-#include <cstdint>
-#include <cstdio>
 #include <hw/display.hh>
 #include <hardware/gpio.h>
 #include <hardware/i2c.h>
 #include "textRenderer/8x8_font.h"
-#include <memory>
-#include <string>
 
 
 #define I2C_DISPLAY_PORT i2c1
@@ -17,12 +12,10 @@ constexpr uint8_t WAIT_MS_FOR_DISPLAY_SETUP = 250;
 
 DisplayManager::DisplayManager(){
     i2c_init(i2c1, 50'000);
-    printf("# I2c established\n");
     gpio_set_function(14,GPIO_FUNC_I2C);
     gpio_set_function(15,GPIO_FUNC_I2C);
     gpio_pull_up(14);
     gpio_pull_up(15);
-    printf("# I2c pullups established\n");
 
     sleep_ms(WAIT_MS_FOR_DISPLAY_SETUP);
 

@@ -12,7 +12,6 @@ TempSensorInput::TempSensorInput(){
 
 // 0->start measure ...     collectOn -> save measure and write out, set back to 0
 void TempSensorInput::try_poll(){
-    // printf("DHT Cpoll %hhu\n",cycleCount);
     if(cycleCount==0) {
         dht_start_measurement(&this->dht);
         cycleCount++;

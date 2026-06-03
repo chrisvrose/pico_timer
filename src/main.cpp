@@ -5,26 +5,13 @@
 #include "hw/temp_dht.hh"
 #include "input.hh"
 #include <cstdio>
-#include <pico/assert.h>
 #include <pico/stdio.h>
-#include <pico/time.h>
-#include <pico/types.h>
-
-static const datetime_t DEFAULT_DATETIME_2000_01_01 = {
-    .year = 2000,
-    .month = 1,
-    .day = 1,
-    .dotw = 6, // 0=Sunday ... 6=Saturday
-    .hour = 0,
-    .min = 0,
-    .sec = 0,
-};
 
 int main() {
     stdio_init_all();
 
     RTCAdapter rtc;
-    rtc.set_time(DEFAULT_DATETIME_2000_01_01);
+    rtc.set_time(RTCAdapter::DEFAULT_DATETIME_2000_01_01);
 
     InputManager inputManager;
     TempSensorInput tempSensorInput;

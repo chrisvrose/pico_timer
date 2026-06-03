@@ -1,7 +1,6 @@
 #include <cstdio>
 #include <input.hh>
 #include <iostream>
-#include <optional>
 #include <pico/stdio.h>
 #include <pico/time.h>
 #include <sys/select.h>
