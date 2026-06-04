@@ -16,6 +16,7 @@
   - [ ] Set time from timesync-sv
   - [ ] Set alarm from timesync-sv
 - [ ] pico_timer
+  - [ ] Input bufferring
   - [ ] UI - Have a better UI
 - [ ] Alarm
   - [ ] Set alarm

@@ -64,23 +64,23 @@ void App::draw_temp_humidity(
 
     float temp = env_input.has_value() ? env_input->temp_in_c : -1;
     snprintf(envText, 17, "T: %.2f 'C", temp);
-    displayManager.drawTextWrapped(envText, 0, 24);
+    displayManager.drawTextWrapped(envText, 0, 3);
 
     float humidity =
         env_input.has_value() ? env_input->humidity_in_percentage : -1;
     snprintf(envText, 17, "H: %.2f %%", humidity);
-    displayManager.drawTextWrapped(envText, 0, 32);
+    displayManager.drawTextWrapped(envText, 0, 4);
 }
 
 void App::dispatch_sync(Input entered_input) {
     // printf("We will pretend to sync time\n");
-    displayManager.drawText("Syncing Time");
+    displayManager.drawTextWrapped("Syncing Time");
 
     char left_ticks_text[32] = {};
 
     snprintf(left_ticks_text, 32, "TTS: %d", 20 - ticks_in_state);
 
-    displayManager.drawTextWrapped(left_ticks_text, 0, 32);
+    displayManager.drawTextWrapped(left_ticks_text, 0, 4);
     std::optional<datetime_t> init_date = inputManager.request_time_from_com();
 
     if (init_date.has_value()) {
