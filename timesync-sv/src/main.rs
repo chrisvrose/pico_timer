@@ -2,8 +2,18 @@ use bufstream::BufStream;
 use serialport::{SerialPort, SerialPortInfo, SerialPortType, UsbPortInfo};
 use std::{
     io::{BufRead, ErrorKind, Write},
+    sync::mpsc::{Receiver, SyncSender, sync_channel},
+    thread,
     time::Duration,
 };
+
+use crate::{
+    messages::{UIMessages, WorkerMessages},
+    ui::{update, view},
+};
+mod coms;
+mod messages;
+mod ui;
 
 fn main() {
     println!("Hello, world!");
@@ -16,16 +26,37 @@ fn main() {
     let selected_port = selected_ports.first().expect("Expected one pico!");
 
     let selected_port_name = selected_port.port_name.clone();
+
+    let (main_sender, main_receiver) = sync_channel::<UIMessages>(10);
+    let (worker_sender, worker_receiver) = sync_channel::<WorkerMessages>(10);
+
+    iced::run(update, view).expect("What");
+    // let (sender, receiver) = sync_channel::<WorkerMessages>(10);
+    thread::scope(move |_scope| {
+        println!("Ba");
+        open_selected_port_and_interact(selected_port_name, worker_sender, main_receiver);
+    });
+}
+
+fn open_selected_port_and_interact(
+    selected_port_name: String,
+    work_sender: SyncSender<WorkerMessages>,
+    main_receiver: Receiver<UIMessages>,
+) {
     println!("Opening Serial {}", selected_port_name);
     let port = serialport::new(selected_port_name, 115200)
         .timeout(Duration::from_secs(5))
         .open()
         .expect("Failed to open");
 
-    interact(port);
+    interact(port, work_sender, main_receiver);
 }
 
-fn interact(mut port: Box<dyn SerialPort>) -> ! {
+fn interact(
+    mut port: Box<dyn SerialPort>,
+    work_sender: SyncSender<WorkerMessages>,
+    main_receiver: Receiver<UIMessages>,
+) -> ! {
     let mut buffered_stream = BufStream::new(port.as_mut());
     loop {
         let mut pi_output = String::with_capacity(32);
