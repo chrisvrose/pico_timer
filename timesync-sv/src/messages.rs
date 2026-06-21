@@ -11,6 +11,9 @@ pub enum WorkerMessages {
 }
 
 // TODO
-pub struct PiCommand;
+#[derive(Debug, PartialEq, Eq)]
+pub enum PiCommand {
+    SyncTime,
+}
 // TODO
 pub struct PiResponse;
