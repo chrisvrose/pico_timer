@@ -9,9 +9,9 @@ use crate::{
 };
 mod coms;
 mod messages;
+mod proto;
 mod ui;
 mod worker;
-
 fn main() {
     println!("Hello, world!");
     let ports = serialport::available_ports().unwrap();
