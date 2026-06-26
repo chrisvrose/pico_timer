@@ -1,14 +1,11 @@
-#include <cstdio>
 #include <functional>
 #include <input.hh>
-#include <iostream>
 #include <optional>
 #include <pico/stdio.h>
 #include <pico/time.h>
 #include <pico/types.h>
 #include <sys/select.h>
 #include <sys/unistd.h>
-#include <vector>
 
 std::optional<ClientResponse> InputManager::try_recv() const {
     return this->comSerialServer.try_recv();
