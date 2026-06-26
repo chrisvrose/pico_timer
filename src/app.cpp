@@ -81,20 +81,19 @@ void App::dispatch_sync(Input entered_input) {
     snprintf(left_ticks_text, 32, "TTS: %d", 20 - ticks_in_state);
 
     displayManager.drawTextWrapped(left_ticks_text, 0, 4);
-    std::optional<datetime_t> init_date = inputManager.request_time_from_com();
 
-    if (init_date.has_value()) {
-        printf("# Successfully polled data");
-        const datetime_t init_date_val = init_date.value();
-        bool was_set = rtcAdapter.set_time(init_date_val);
+    auto did_set_time = inputManager.request_time_from_com(
+        [&](std::optional<datetime_t> init_date) {
+            printf("# Successfully polled data");
+            const datetime_t init_date_val = init_date.value();
+            bool was_set = rtcAdapter.set_time(init_date_val);
+            return was_set;
+        });
 
-        if (was_set) {
-            this->transition(CurrentMode::USUAL);
-        } else {
-            printf("# Could not set the time\n");
-        }
+    if (did_set_time) {
+        this->transition(CurrentMode::USUAL);
     }
-    if (ticks_in_state > 20) {
+    if (ticks_in_state > 10) {
         this->transition(DEGRADED_NO_TIME);
     }
     sleep_us(20);

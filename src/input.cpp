@@ -1,44 +1,32 @@
 #include <cstdio>
+#include <functional>
 #include <input.hh>
 #include <iostream>
+#include <optional>
 #include <pico/stdio.h>
 #include <pico/time.h>
+#include <pico/types.h>
 #include <sys/select.h>
 #include <sys/unistd.h>
 #include <vector>
 
-const std::vector<std::string> MESSAGE_TYPE_STRINGS = {"REQ_TIME", "ACK_TIME",
-                                                       "ERR_TIME", "ERR_TMO"};
-
-std::optional<datetime_t> InputManager::try_parse_req_time_response() const {
-    constexpr uint8_t INPUT_BUFFER_LEN = 32;
-    char input_buffer[INPUT_BUFFER_LEN] = {0};
-    auto t1 = make_timeout_time_ms(100);
-
-    int read_chars = stdio_get_until(input_buffer, INPUT_BUFFER_LEN, t1);
-    if (read_chars == PICO_ERROR_TIMEOUT) {
-        send_message(ERR_TMO);
-        return std::nullopt;
-    }
-    printf("# READ %d chars\n", read_chars);
-
-    datetime_t d = {};
-    int readParams = sscanf(input_buffer, "ACK(%hd-%hhd-%hhdT%hhd:%hhd:%hhd)",
-                            &d.year, &d.month, &d.day, &d.hour, &d.min, &d.sec);
-    if (readParams != 6) {
-        send_message(ERR_TIME);
-        return std::nullopt;
-    } else {
-        send_message(ACK_TIME);
-        return std::make_optional(d);
-    }
+std::optional<ClientResponse> InputManager::try_recv() const {
+    return this->comSerialServer.try_recv();
 }
 
-void InputManager::send_message(COM_REQ_MESSAGE_TYPES msg_type) const {
-    std::cout << MESSAGE_TYPE_STRINGS[msg_type] << std::endl;
+void InputManager::send_message(ServerMsg msg_type) const {
+    return this->comSerialServer.send(msg_type);
 }
 
-std::optional<datetime_t> InputManager::request_time_from_com() const {
+bool InputManager::request_time_from_com(std::function<bool(datetime_t)> callback) const {
     send_message(REQ_TIME);
-    return try_parse_req_time_response();
+
+    auto recvd = try_recv();
+    if(recvd.has_value() && recvd.value().type==ClientResponseType::SET_TME){
+        auto did_update = callback(recvd.value().time);
+        send_message(did_update? ServerMsg::ACK_TIME:ServerMsg::ERR_TIME);
+        return did_update;
+    }
+    return false;
+
 }

@@ -33,6 +33,7 @@ add_subdirectory(libs/pico_dht/dht)
 
 # Tell CMake where to find the executable source file
 add_executable(clock
+    src/comm/server.cpp
     src/hw/display.cpp
     src/hw/temp_dht.cpp
     src/hw/rtc.cpp

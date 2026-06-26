@@ -37,7 +37,7 @@ fn main() {
         worker.open().expect("It should work");
 
         loop {
-            worker.interact_once();
+            worker.interact_once().expect("IO Error");
         }
     });
 }

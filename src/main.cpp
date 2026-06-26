@@ -13,12 +13,13 @@ int main() {
     RTCAdapter rtc;
     rtc.set_time(RTCAdapter::DEFAULT_DATETIME_2000_01_01);
 
-    InputManager inputManager;
+    ComSerialServer comServer;
+    InputManager inputManager(comServer);
     TempSensorInput tempSensorInput;
     DisplayManager displayManager;
     App app_context_instance(displayManager, inputManager, tempSensorInput,
                              rtc);
-    printf("# App established\n");
+    comServer.log("App established");
 
     displayManager.clear();
 

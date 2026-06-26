@@ -12,7 +12,7 @@ impl<T: Write + Read> SyncProtocolClient<T> {
         SyncProtocolClient { buf }
     }
 
-    pub fn interact_once(&mut self) {
+    pub fn interact_once(&mut self) -> Result<(), std::io::Error> {
         let mut pi_output = String::with_capacity(32);
 
         let pi_output_size_res = self.buf.read_line(&mut pi_output);
@@ -20,7 +20,7 @@ impl<T: Write + Read> SyncProtocolClient<T> {
         match pi_output_size_res {
             Err(e) if e.kind() == ErrorKind::TimedOut => {}
             Err(err) => {
-                panic!("error {}", err);
+                return Err(err);
             }
             Ok(_) => {}
         }
@@ -28,9 +28,10 @@ impl<T: Write + Read> SyncProtocolClient<T> {
         let output = Self::process_input(&pi_output);
         if let Some(output) = output {
             println!("Responding with output {}", output);
-            self.buf.write(output.as_bytes()).expect("Failed to write");
-            self.buf.flush().expect("Could not flush bufstream");
-        }
+            self.buf.write(output.as_bytes())?;
+            self.buf.flush()?;
+        };
+        Ok(())
     }
 
     fn process_input(input: &String) -> Option<String> {

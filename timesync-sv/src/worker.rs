@@ -40,4 +40,7 @@ impl Worker {
         self.client = Some(client);
         Ok(())
     }
+    pub fn interact_once(&mut self) -> Result<(), std::io::Error> {
+        return self.client.as_mut().unwrap().interact_once();
+    }
 }
