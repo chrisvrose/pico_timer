@@ -40,13 +40,13 @@ impl<T: Write + Read> SyncProtocolClient<T> {
             "REQ_TIME" => {
                 println!("Requested: Time!");
                 let datetime = chrono::Local::now();
-                Some(format!("ACK({})", datetime.format("%Y-%m-%dT%H:%M:%S")))
+                Some(format!("SET_TME({})", datetime.format("%Y-%m-%dT%H:%M:%S")))
             }
-            "ACK_TIME" => {
+            "ACK_TME" => {
                 println!("Set time successfully!");
                 None
             }
-            "ERR_TIME" => {
+            "ERR_TME" => {
                 println!("Failed to set time :(");
                 None
             }

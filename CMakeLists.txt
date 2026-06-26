@@ -33,13 +33,13 @@ add_subdirectory(libs/pico_dht/dht)
 
 # Tell CMake where to find the executable source file
 add_executable(clock
-    src/comm/server.cpp
-    src/hw/display.cpp
-    src/hw/temp_dht.cpp
-    src/hw/rtc.cpp
-    src/app.cpp
-    src/main.cpp
-    src/input.cpp
+    src/comm/server.cc
+    src/hw/display.cc
+    src/hw/temp_dht.cc
+    src/hw/rtc.cc
+    src/app.cc
+    src/main.cc
+    src/input.cc
 )
 
 # Create map/bin/hex/uf2 files
@@ -72,7 +72,7 @@ pico_enable_stdio_uart(clock 0)
 
 # Tell CMake where to find the executable source file
 add_executable(scan_i2c
-    src/scan_i2c.cpp
+    src/scan_i2c.cc
 )
 
 # Create map/bin/hex/uf2 files
